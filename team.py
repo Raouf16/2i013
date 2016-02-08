@@ -5,8 +5,8 @@ from soccersimulator import Player, SoccerTournament
 from strategies import attaquantcentral, defenseurcentral, defenseurgauche, defenseurdroit, Milieu
 
 
-team1 = SoccerTeam ("Real Madrid",[Player("Messi",attaquantcentral())])
+team1 = SoccerTeam ("DZPOWER",[Player("Messi",attaquantcentral())])
 
-team2 = SoccerTeam ("Real Madrid",[Player("Raouf",attaquantcentral()), Player("Yacine",defenseurgauche())])
+team2 = SoccerTeam ("DZPOWER",[Player("Raouf",attaquantcentral()), Player("Yacine",defenseurcentral())])
 
-team4 = SoccerTeam ("Barca",[Player("Raouf",attaquantcentral()), Player("Yacine",Milieu()), Player("Raouf JR",defenseurgauche()), Player("Yacine JR",defenseurdroit())])
+team4 = SoccerTeam ("DZPOWER",[Player("Raouf",attaquantcentral()), Player("Yacine",Milieu()), Player("Raouf JR",defenseurgauche()), Player("Yacine JR",defenseurdroit())])

@@ -24,6 +24,18 @@ def courirVersBalle(vjoueur,vballe):
 	return SoccerAction(vballe - vjoueur, Vector2D(0,0))
 
 #Si le joueur est dans sa zone defensive, il shoote
+def peutShooterDefensegauche(vballe,vjoueur,id_team):
+	if(id_team == 1):
+		return vballe.x < 35
+	else:
+		return vballe.x > 115
+
+def peutShooterDefensedroit(vballe,vjoueur,id_team):
+	if(id_team == 1):
+		return vballe.x < 50
+	else:
+		return vballe.x > 100
+
 def peutShooterDefense(vballe,vjoueur,id_team):
 	if(id_team == 1):
 		return vballe.x < 35
@@ -44,7 +56,7 @@ def peutShooterMilieu(vballe,vjoueur,id_team):
 def shootDefense(vjoueur,vballe,id_team):
 	if(id_team == 1):
             	if (peutShooter(vjoueur,vballe)):
-			return SoccerAction(Vector2D(10, settings.GAME_HEIGHT / 2) - vjoueur, Vector2D(0,0))
+			return SoccerAction(vballe - vjoueur, Vector2D(settings.GAME_WIDTH, settings.GAME_HEIGHT / 2) - vjoueur)
 		else: 
 			return SoccerAction(vballe - vjoueur, Vector2D(0,0))
 	else:
@@ -130,6 +142,20 @@ class defenseurgauche(BaseStrategy): #Strategie du defenseur gauche
 			return shootDefense(vjoueur,vballe,id_team)
 		return replacementDefenseurGauche(vjoueur,vballe,id_team)
 
+
+class defenseurdroit6(BaseStrategy): #Strategie du defenseur droit
+	def __init__(self):
+        	BaseStrategy.__init__(self, "Aleatoire")
+	    
+    	def compute_strategy(self, state, id_team, id_p1ayer):
+        	p = state.player_state(id_team, id_p1ayer)
+        	vballe = state.ball.position
+        	vjoueur = p.position
+        
+		if(peutShooterDefensedroit(vballe,vjoueur,id_team)):
+			return shootDefense(vjoueur,vballe,id_team)
+		return replacementDefenseurDroit(vjoueur,vballe,id_team)
+
 class defenseurdroit(BaseStrategy): #Strategie du defenseur droit
 	def __init__(self):
         	BaseStrategy.__init__(self, "Aleatoire")
@@ -155,6 +181,10 @@ class Milieu(BaseStrategy): #Strategie de contre attaque
 		if(peutShooterMilieu(vballe,vjoueur,id_team)):
 			return shootDefense(vjoueur,vballe,id_team)
 		return replacementMilieu(vjoueur,vballe,id_team)
+
+
+
+
 
 
 
