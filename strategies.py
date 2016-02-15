@@ -9,15 +9,17 @@ def peutShooter(vjoueur,vballe):
 
 def passeOuShoot(vjoueur, vballe, id_team):
 	if(id_team == 1): 
-		if(vballe.x > settings.GAME_WIDTH - 5): #Si on est loin des buts, on fait des petites passes
-			return SoccerAction(vballe - vjoueur, (Vector2D(settings.GAME_WIDTH, settings.GAME_HEIGHT / 2) - vjoueur) * 0.03)
-		else: #Sinon, on tire
-                	return SoccerAction(vballe - vjoueur, Vector2D(settings.GAME_WIDTH, settings.GAME_HEIGHT / 2) - vjoueur)
+		if(vballe.x > settings.GAME_WIDTH - 30): #on tire
+			return SoccerAction(vballe - vjoueur, Vector2D(settings.GAME_WIDTH, settings.GAME_HEIGHT / 2) - vjoueur)
+		else:#Si on est loin des buts, on fait des petites passes
+			return SoccerAction(vballe - vjoueur, (Vector2D(settings.GAME_WIDTH, settings.GAME_HEIGHT / 2) - vjoueur))
+
 	else:
-		if(vballe.x < 5): #Si on est loin des buts, on fait des petites passes
-			return SoccerAction(vballe - vjoueur, (Vector2D(0, settings.GAME_HEIGHT / 2) - vjoueur) * 0.03)
-		else: #Sinon, on tire
-                	return SoccerAction(vballe - vjoueur, Vector2D(0, settings.GAME_HEIGHT / 2) - vjoueur)
+		if(vballe.x < 30): # on tire
+			return SoccerAction(vballe - vjoueur, Vector2D(0, settings.GAME_HEIGHT / 2) - vjoueur)
+		else: #Si on est loin des buts, on fait des petites passes
+          
+			return SoccerAction(vballe - vjoueur, (Vector2D(0, settings.GAME_HEIGHT / 2) - vjoueur))
 
  #Si on peut ni tirer ni passer, on court vers la balle
 def courirVersBalle(vjoueur,vballe):
@@ -50,6 +52,12 @@ def peutShooterMilieu(vballe,vjoueur,id_team):
 		return (vballe.x > 35) 
 	else:
 		return (vballe.x < settings.GAME_WIDTH - 35) 
+
+def peutShooterMilieuDefensif(vballe,vjoueur,id_team):
+	if(id_team == 1):
+		return (vballe.x < settings.GAME_WIDTH/2+10) 
+	else:
+		return (vballe.x > settings.GAME_WIDTH/2-10) 
 
 
 #Si la balle est dans la zone du defenseur, il shoote
@@ -92,6 +100,12 @@ def replacementMilieu(vjoueur,vballe,id_team):
 		return SoccerAction(Vector2D(50, settings.GAME_HEIGHT/2) - vjoueur, Vector2D(0,0))
 	else:
 		return SoccerAction(Vector2D(settings.GAME_WIDTH - 50, settings.GAME_HEIGHT/2) - vjoueur, Vector2D(0,0)) #Prend sa position de contre attaquant
+
+def replacementMilieuDefensif(vjoueur,vballe,id_team):
+	if (id_team == 1):
+		return SoccerAction(Vector2D(settings.GAME_WIDTH/2+10, vballe.y) - vjoueur, Vector2D(0,0))
+	else:
+		return SoccerAction(Vector2D(settings.GAME_WIDTH/2-10, vballe.y) - vjoueur, Vector2D(0,0)) 
 
 		
 
@@ -167,7 +181,7 @@ class defenseurdroit(BaseStrategy): #Strategie du defenseur droit
         
 		if(peutShooterDefense(vballe,vjoueur,id_team)):
 			return shootDefense(vjoueur,vballe,id_team)
-		return replacementDefenseurDroit(vjoueur,vballe,id_team) 
+		return replacementDefenseurDroit(vjoueur,vballe,id_team)
 
 class Milieu(BaseStrategy): #Strategie de contre attaque
 	def __init__(self):
@@ -179,8 +193,22 @@ class Milieu(BaseStrategy): #Strategie de contre attaque
         	vjoueur = p.position
         
 		if(peutShooterMilieu(vballe,vjoueur,id_team)):
-			return shootDefense(vjoueur,vballe,id_team)
+			return passeOuShoot(vjoueur,vballe,id_team)
 		return replacementMilieu(vjoueur,vballe,id_team)
+
+
+class Milieudefensif(BaseStrategy): #Strategie de contre attaque
+	def __init__(self):
+        	BaseStrategy.__init__(self, "Aleatoire")
+	    
+    	def compute_strategy(self, state, id_team, id_p1ayer):
+        	p = state.player_state(id_team, id_p1ayer)
+        	vballe = state.ball.position
+        	vjoueur = p.position
+        
+		if(peutShooterMilieuDefensif(vballe,vjoueur,id_team)):
+			return passeOuShoot(vjoueur,vballe,id_team)
+		return replacementMilieuDefensif(vjoueur,vballe,id_team)
 
 
 
