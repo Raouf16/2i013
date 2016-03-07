@@ -89,12 +89,10 @@ class PlayerStateDecorator :
 		return (self.position_balle.distance(self.position_joueur)) < (settings.PLAYER_RADIUS + settings.BALL_RADIUS) 
 
 	@property
-	def passeOuShoot(self):
+	def Shoot(self):
 		return SoccerAction(self.position_balle - self.position_joueur, Vector2D(settings.GAME_WIDTH, settings.GAME_HEIGHT / 2) - self.position_joueur)
 	
-	@property
-	def passeVersAttaque(self):
-		return SoccerAction(self.position_balle - self.position_joueur, self.position_attaquant - self.position_joueur)
+	
 	@property
 	def courirVersBalle(self):
 		return SoccerAction(self.position_balle - self.position_joueur, Vector2D(0,0))
@@ -166,14 +164,14 @@ class PlayerStateDecorator :
 
 def attaquant_fonceur(Mystate):
 	if(Mystate.peutShooter):
-		return Mystate.passeOuShoot	
+		return Mystate.Shoot	
  	else:
              	return Mystate.courirVersBalle
 
 def attaquant_pointe(Mystate):
 	if(Mystate.peutShooterAttaque):
 		if(Mystate.peutShooter):
-			return Mystate.passeOuShoot
+			return Mystate.Shoot
 		else:
 			return Mystate.courirVersBalle
 	else:
@@ -206,7 +204,7 @@ def defenseur_droit(Mystate):
 def milieu(Mystate):
 	if(Mystate.peutShooterMilieu):
 		if(Mystate.peutShooter):
-			return Mystate.passeOuShoot
+			return Mystate.Shoot
 		else:
 			return Mystate.courirVersBalle
 	return Mystate.replacementMilieu
@@ -214,7 +212,7 @@ def milieu(Mystate):
 def milieu_defensif(Mystate):
 	if(Mystate.peutShooterMilieuDefensif):
 		if(Mystate.peutShooter):
-			return Mystate.passeOuShoot
+			return Mystate.Shoot
 		else:
 			return Mystate.courirVersBalle
 	return Mystate.replacementMilieuDefensif

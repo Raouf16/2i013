@@ -20,7 +20,7 @@ class Strat(BaseStrategy):
             return miroir_sa(self.comportement(Mystate))
 
 
-attaquant = Strat(attaquant_fonceur, "A")
+attaquant_fonceur = Strat(attaquant_fonceur, "A")
 attaquant_pointe = Strat(attaquant_pointe, "AP")
 defenseur_central = Strat(defenseur_central, "DC")
 defenseur_gauche = Strat(defenseur_gauche, "DG")
@@ -28,17 +28,18 @@ defenseur_droit = Strat(defenseur_droit, "DD")
 milieu = Strat(milieu, "M")
 milieu_defensif = Strat(milieu_defensif, "MD")
 
+
 #### Arbres de decisions
 
 tree = cPickle.load(file("./arbre.pkl"))
-dic = {"A":Strat(attaquant_fonceur, "1"),"AP":Strat(attaquant_pointe, "2"),"DC":Strat(defenseur_central, "3"), "DG":Strat(defenseur_gauche, "4"), "DD":Strat(defenseur_droit, "5"), "M":Strat(milieu, "6"), "MD":Strat(milieu_defensif, "7")}
+dic = {"A":attaquant_fonceur,"AP":attaquant_pointe,"DC":defenseur_central, "DG":defenseur_gauche, "DD":defenseur_droit, "M":milieu, "MD":milieu_defensif}
 treeStrat = DTreeStrategy(tree,dic,gen_features)
 
 #### Controle avec commandes 
 
-keytest = KeyboardStrategy(fn = "arbre")
+keytest = KeyboardStrategy(fn="arbre")
 
-keytest.add("a", attaquant)
+keytest.add("a", attaquant_fonceur)
 keytest.add("z", attaquant_pointe)           
 keytest.add("d", defenseur_central)  
 keytest.add("e", milieu)  
